@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Danitro12 — Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f7f6f3;
+      --ink: #141210;
+      --ink-soft: #6b6760;
+      --accent: #c9440a;
+      --line: #dddbd6;
+      --card-bg: #ffffff;
+      --tag-bg: #efefec;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Mono', monospace;
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── NOISE TEXTURE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── NAVIGATION ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1.25rem 2.5rem;
+      background: rgba(247,246,243,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+      z-index: 100;
+    }
+
+    .nav-logo {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.1rem;
+      color: var(--ink);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+
+    .nav-logo span { color: var(--accent); }
+
+    nav ul {
+      list-style: none;
+      display: flex; gap: 2rem;
+    }
+
+    nav ul a {
+      text-decoration: none;
+      color: var(--ink-soft);
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    nav ul a:hover { color: var(--accent); }
+
+    /* ── MAIN LAYOUT ── */
+    main {
+      position: relative; z-index: 1;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column; justify-content: center;
+      padding-top: 5rem;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .hero-eyebrow {
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 0.6s 0.1s forwards;
+    }
+
+    .hero-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(3rem, 8vw, 7rem);
+      line-height: 1.0;
+      letter-spacing: -0.03em;
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeUp 0.7s 0.25s forwards;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .hero-desc {
+      font-size: 0.9rem;
+      color: var(--ink-soft);
+      line-height: 1.8;
+      max-width: 520px;
+      margin-bottom: 3rem;
+      opacity: 0;
+      animation: fadeUp 0.7s 0.4s forwards;
+    }
+
+    .hero-tags {
+      display: flex; flex-wrap: wrap; gap: 0.6rem;
+      opacity: 0;
+      animation: fadeUp 0.7s 0.55s forwards;
+    }
+
+    .pill {
+      font-size: 0.7rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 0.35rem 0.9rem;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--ink-soft);
+      background: var(--card-bg);
+    }
+
+    /* ── SECTION HEADERS ── */
+    .section-header {
+      display: flex; align-items: center; gap: 1.5rem;
+      padding: 4rem 0 2.5rem;
+    }
+
+    .section-header h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+    }
+
+    .section-line {
+      flex: 1;
+      height: 1px;
+      background: var(--line);
+    }
+
+    /* ── PROJECTS GRID ── */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+      padding-bottom: 5rem;
+    }
+
+    .project-card {
+      background: var(--card-bg);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 1.75rem;
+      text-decoration: none;
+      color: inherit;
+      display: flex; flex-direction: column;
+      transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
+      opacity: 0;
+      animation: fadeUp 0.5s forwards;
+    }
+
+    .project-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.08);
+      border-color: var(--accent);
+    }
+
+    .card-top {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+
+    .card-icon {
+      font-size: 1.5rem;
+      line-height: 1;
+    }
+
+    .card-arrow {
+      font-size: 1rem;
+      color: var(--line);
+      transition: color 0.2s, transform 0.2s;
+    }
+
+    .project-card:hover .card-arrow {
+      color: var(--accent);
+      transform: translate(3px, -3px);
+    }
+
+    .card-num {
+      font-size: 0.65rem;
+      color: var(--line);
+      letter-spacing: 0.1em;
+      margin-bottom: 0.75rem;
+    }
+
+    .card-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.25rem;
+      letter-spacing: -0.01em;
+      margin-bottom: 0.6rem;
+    }
+
+    .card-desc {
+      font-size: 0.78rem;
+      color: var(--ink-soft);
+      line-height: 1.7;
+      flex: 1;
+      margin-bottom: 1.25rem;
+    }
+
+    .card-tags {
+      display: flex; flex-wrap: wrap; gap: 0.4rem;
+    }
+
+    .tag {
+      font-size: 0.65rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 0.2rem 0.55rem;
+      background: var(--tag-bg);
+      border-radius: 2px;
+      color: var(--ink-soft);
+    }
+
+    /* ── ABOUT ── */
+    #about {
+      border-top: 1px solid var(--line);
+      padding: 5rem 0;
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .about-label {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+
+    .about-label em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .about-text p {
+      font-size: 0.85rem;
+      color: var(--ink-soft);
+      line-height: 1.9;
+      margin-bottom: 1rem;
+    }
+
+    .about-text p:last-child { margin-bottom: 0; }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--line);
+      padding: 2rem 0;
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 0.72rem;
+      color: var(--ink-soft);
+      letter-spacing: 0.04em;
+    }
+
+    footer a {
+      color: var(--ink-soft);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    footer a:hover { color: var(--accent); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* stagger project cards */
+    .project-card:nth-child(1) { animation-delay: 0.05s; }
+    .project-card:nth-child(2) { animation-delay: 0.12s; }
+    .project-card:nth-child(3) { animation-delay: 0.19s; }
+    .project-card:nth-child(4) { animation-delay: 0.26s; }
+    .project-card:nth-child(5) { animation-delay: 0.33s; }
+    .project-card:nth-child(6) { animation-delay: 0.40s; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 680px) {
+      nav { padding: 1rem 1.25rem; }
+      nav ul { gap: 1.2rem; }
+      main { padding: 0 1.25rem; }
+      #about { grid-template-columns: 1fr; gap: 2rem; }
+      footer { flex-direction: column; gap: 0.75rem; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="#hero" class="nav-logo">D<span>.</span>12</a>
+  <ul>
+    <li><a href="#projects">Proyectos</a></li>
+    <li><a href="#about">Sobre mí</a></li>
+    <li><a href="https://github.com/Danitro12" target="_blank">GitHub ↗</a></li>
+  </ul>
+</nav>
+
+<main>
+
+  <!-- HERO -->
+  <section id="hero">
+    <p class="hero-eyebrow">Estudiante en ingeniería informática</p>
+    <h1 class="hero-title">
+      Jose Daniel<br/>
+      <em>Ojeda Tro</em>
+    </h1>
+
+    <div class="hero-tags">
+      <span class="pill">Android</span>
+      <span class="pill">Deep Learning</span>
+      <span class="pill">Python</span>
+      <span class="pill">MongoDB</span>
+      <span class="pill">Automatización IA</span>
+      <span class="pill">Computer Vision</span>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects">
+    <div class="section-header">
+      <h2>Proyectos</h2>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="projects-grid">
+
+      <a class="project-card" href="https://github.com/MoonPyxx/NPI_Leap" target="_blank">
+
+        <p class="card-num">01</p>
+        <h3 class="card-title">NPI Android</h3>
+        <p class="card-desc">Aplicación Android desarrollada como proyecto universitario, explorando interacción y procesamiento en dispositivos móviles.</p>
+        <div class="card-tags">
+          <span class="tag">Android</span>
+          <span class="tag">Java / Kotlin</span>
+          <span class="tag">Mobile</span>
+        </div>
+      </a>
+
+      <a class="project-card" href="https://github.com/Danitro12/PDM" target="_blank">
+
+        <p class="card-num">02</p>
+        <h3 class="card-title">PDM</h3>
+        <p class="card-desc">Proyecto de desarrollo móvil enfocado en la adquisición y gestión de datos en entornos Android.</p>
+        <div class="card-tags">
+          <span class="tag">Android</span>
+          <span class="tag">Mobile Dev</span>
+        </div>
+      </a>
+
+      <a class="project-card" href="https://github.com/Danitro12/Web_mercadona_mongoDB" target="_blank">
+
+        <p class="card-num">04</p>
+        <h3 class="card-title">Web Mercadona</h3>
+        <p class="card-desc">Aplicación web que consume y muestra datos de productos con MongoDB como base de datos NoSQL. Diseño y back-end propios.</p>
+        <div class="card-tags">
+          <span class="tag">Web</span>
+          <span class="tag">MongoDB</span>
+          <span class="tag">NoSQL</span>
+          <span class="tag">JavaScript</span>
+        </div>
+      </a>
+
+      <a class="project-card" href="https://github.com/Danitro12/Clasification_And_Regression_Problems" target="_blank">
+
+        <p class="card-num">05</p>
+        <h3 class="card-title">Classification &amp; Regression</h3>
+        <p class="card-desc">Modelos de machine learning para problemas de clasificación y regresión, con análisis comparativo de algoritmos y métricas.</p>
+        <div class="card-tags">
+          <span class="tag">Python</span>
+          <span class="tag">Scikit-learn</span>
+          <span class="tag">ML</span>
+          <span class="tag">Jupyter</span>
+        </div>
+      </a>
+
+      <a class="project-card" href="https://github.com/Danitro12/CNN_ipybn" target="_blank">
+
+        <p class="card-num">06</p>
+        <h3 class="card-title">CNN — Deep Learning</h3>
+        <p class="card-desc">Implementación de redes neuronales convolucionales en notebooks Jupyter para tareas de reconocimiento y clasificación de imágenes.</p>
+        <div class="card-tags">
+          <span class="tag">Python</span>
+          <span class="tag">TensorFlow</span>
+          <span class="tag">CNN</span>
+          <span class="tag">Deep Learning</span>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="about-label">
+      Sobre<br/><em>mí.</em>
+    </div>
+    <div class="about-text">
+      <p>
+        Soy estudiante con experiencia práctica en ciertas de tecnologías:
+        desarrollo de apps Android, creación de webs con bases de datos NoSQL,
+        visión por computador y modelos de deep learning.
+      </p>
+      <p>
+        Me apasiona la intersección entre el desarrollo de software y la inteligencia
+        artificial, especialmente la automatización de tareas con IA y el procesamiento
+        de imágenes con redes neuronales convolucionales.
+      </p>
+      <p>
+        Actualmente busco prácticas en empresa donde poder aportar y
+        seguir aprendiendo en un entorno profesional real.
+      </p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <span>© 2025 Danitro12</span>
+    <span>
+      <a href="https://github.com/Danitro12" target="_blank">github.com/Danitro12</a>
+    </span>
+  </footer>
+
+</main>
+
+</body>
+</html>
